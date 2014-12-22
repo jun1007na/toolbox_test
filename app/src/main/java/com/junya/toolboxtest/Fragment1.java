@@ -1,18 +1,18 @@
 package com.junya.toolboxtest;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Fragment1 extends Fragment {
+
+    RecyclerView mRecyclerView;
+    TimeListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -20,32 +20,12 @@ public class Fragment1 extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment1, null);
 
-        // リソースに準備した画像ファイルからBitmapを作成しておく
-        Bitmap image;
-        image = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        mRecyclerView = (RecyclerView)v.findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // データの作成
-        List<CustomData> objects = new ArrayList<CustomData>();
-        CustomData item1 = new CustomData();
-        item1.setImagaData(image);
-        item1.setTextData("１つ目〜");
-
-        CustomData item2 = new CustomData();
-        item2.setImagaData(image);
-        item2.setTextData("The second");
-
-        CustomData item3 = new CustomData();
-        item3.setImagaData(image);
-        item3.setTextData("Il terzo");
-
-        objects.add(item1);
-        objects.add(item2);
-        objects.add(item3);
-
-        CustomAdapter customAdapater = new CustomAdapter(getActivity(), 0, objects);
-
-        ListView listView = (ListView)v.findViewById(R.id.list);
-        listView.setAdapter(customAdapater);
+        mAdapter= new TimeListAdapter(TimeTableManager.getInstance().getTimes(), R.layout.row_time, getActivity());
+        mRecyclerView.setAdapter(mAdapter);
 
         return v;
     }
